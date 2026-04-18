@@ -8,3 +8,7 @@
 **/*.crt
 letsencrypt/
 */letsencrypt/
+services/immich/postgres/
+services/netdata/
+network/pihole/etc-pihole/
+network/pihole/etc-dnsmasq.d/
