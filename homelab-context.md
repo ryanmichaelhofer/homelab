@@ -1,11 +1,20 @@
 # Hofer Homelab — Context Document
 
-Paste this at the start of every Claude session.
-Update the Session Log and TODO at the end of every session.
+Fetch this at the start of every Claude session from:
+https://github.com/ryanmichaelhofer/homelab/blob/main/homelab-context.md
 
 ---
 
 ## Current Model: Claude Sonnet 4.6
+
+---
+
+## Session Protocol
+
+**Open:** Claude fetches this file from GitHub, issues SSH verification commands,
+Ryan pastes output, Claude draws 3-box server diagram (name + IP + OS only) + todo list.
+
+**Close:** Claude produces updated homelab-context.md content, Ryan pastes block into Nomad terminal and pushes.
 
 ---
 
@@ -15,115 +24,97 @@ Update the Session Log and TODO at the end of every session.
 |---|---|
 | LAN subnet | 10.10.10.0/24 |
 | DNS domain | *.hofer.lan |
-| DNS server | Pihole on nomad (port 53) |
-| Reverse proxy | Nginx Proxy Manager on nomad (ports 80/443) |
+| DNS server | Pihole on Nomad :53 |
+| Reverse proxy | Nginx Proxy Manager on Nomad :80/:443 |
 | SSL | Let's Encrypt via NPM |
 
 ---
 
-## Hosts
+## Servers
 
 ### nomad — 10.10.10.203 (Ubuntu 24.04, Docker)
-Primary server. All compose files live under /srv/homelab/
+**Infrastructure:** npm, pihole, portainer :9443, uptime-kuma :3002, homepage, diun
+**Productivity:** immich :2283, mealie :9925, memos :5230, vaultwarden, filebrowser :8083, kavita :5000, romm :8690
+**Knowledge:** kiwix :8080, kolibri :8082
+**Telemetry:** grafana :3000, influxdb :8086
 
-| Service | Container | Host Port | URL |
-|---|---|---|---|
-| Homepage | homepage | internal | https://dashboard.hofer.lan |
-| Nginx Proxy Manager | npm | 80, 81, 443 | https://npm.hofer.lan |
-| Pihole | pihole | 53, 8081 | https://pihole.hofer.lan |
-| Portainer | portainer | 9000, 9443 | https://nomad.port.hofer.lan |
-| Dozzle | dozzle | internal | https://dozzle.hofer.lan |
-| Immich | immich_server | 2283 | https://photos.hofer.lan |
-| Immich Kiosk | immich-kiosk | 8085 | https://kiosk.hofer.lan |
-| Mealie | mealie | 9925 | https://recipe.hofer.lan |
-| Kavita | kavita | 5000 | https://books.hofer.lan |
-| Kolibri | kolibri | 8082 | https://kolibri.hofer.lan |
-| Kiwix | kiwix | 8080 | https://kiwix.hofer.lan |
-| RomM | romm | 8690 | https://rom.hofer.lan |
-| Memos | memos | 5230 | https://notes.hofer.lan |
-| Vaultwarden | vaultwarden | internal | https://vault.hofer.lan |
-| File Browser | filebrowser | 8083 | https://files.hofer.lan |
-| Grafana | grafana | 3000 | https://graph.hofer.lan |
-| InfluxDB | influxdb | 8086 | (no proxy) |
-| Uptime Kuma | uptime-kuma | 3002 | https://uptime.hofer.lan |
-| Diun | diun | none | (no web UI, update notifier) |
+### rogue — 10.10.10.209 (macOS, OrbStack)
+**Media:** jellyfin :8096, epg-updater
+**AI:** open-webui :3000 → ai.hofer.lan; ollama (native/Metal): llama3.2:3b, gemma3:12b
 
-### rogue — 10.10.10.209 (macOS, Docker)
-Secondary server. Media and AI workloads.
-
-| Service | Container | Host Port | URL |
-|---|---|---|---|
-| Jellyfin | jellyfin | 8096 | https://movies.hofer.lan |
-| Open WebUI | open-webui | 3000 | https://ai.hofer.lan |
-| Portainer | portainer | 9443 | https://rogue.port.hofer.lan |
-
-### butler — 10.10.10.157
-IoT and automation hub. Runs Mosquitto MQTT on port 1883.
-Proxied as https://butler.hofer.lan
-
-### scout — 10.10.10.161 (macOS)
-Ryan's primary workstation. SSH origin for nomad and rogue.
-
-### Unifi devices (network gear, ping-monitored)
-butler, nomad, overwatch, rogue, sentry
+### butler — 10.10.10.157 (HA OS 17.2, Core 2026.4.3)
+**Integrations:** eufy (10 door sensors), garmin (x2), meshtastic (D1L serial), govee purifiers, ha-mcp
+**Add-ons:** mosquitto :1883, matter server, eufy-security-ws, terminal & SSH, file editor
 
 ---
 
-## Uptime Kuma Monitors
-Located at https://uptime.hofer.lan
+## Peripheral Devices
 
-| Monitor | Type | Target |
+| Device | IP | Role | Data flow |
+|---|---|---|---|
+| lookout | 10.10.10.32 | Weather station | → butler |
+| herald | 10.10.10.231 | TV tuner | → jellyfin on rogue |
+| scout | 10.10.10.161 | macOS workstation | SSH origin |
+| command | 10.10.10.68 | Windows workstation | — |
+
+---
+
+## UniFi
+
+| Device | IP | Role |
 |---|---|---|
-| Butler- Mosquitto | TCP port | 10.10.10.157:1883 |
-| Nomad- Dashboard | HTTP | https://dashboard.hofer.lan |
-| Nomad- Dozzle | HTTP | https://dozzle.hofer.lan |
-| Nomad- Emulator | HTTP | https://rom.hofer.lan |
-| Nomad- File Browser | HTTP | https://files.hofer.lan |
-| Nomad- Grafana | HTTP | https://graph.hofer.lan |
-| Nomad- Immich | HTTP | https://photos.hofer.lan |
-| Nomad- Kavita | HTTP | https://books.hofer.lan |
-| Nomad- Kiosk | HTTP | https://kiosk.hofer.lan |
-| Nomad- Kiwix | HTTP | https://kiwix.hofer.lan |
-| Nomad- Kolibrio | HTTP | https://kolibri.hofer.lan |
-| Nomad- Mealie | HTTP | https://recipe.hofer.lan |
-| Nomad- Memos | HTTP | https://notes.hofer.lan |
-| Nomad- Pihole | HTTP | https://pihole.hofer.lan |
-| Nomad- Portainer | HTTP | https://nomad.port.hofer.lan |
-| Nomad- Proxy | HTTP | https://npm.hofer.lan |
-| Nomad- Vaultwarden | HTTP | https://vault.hofer.lan |
-| Rogue- AI | HTTP | https://ai.hofer.lan |
-| Rogue- Jellyfin | HTTP | https://movies.hofer.lan |
-| Rogue- Portainer | HTTP | https://rogue.port.hofer.lan |
-| Unifi- Butler | HTTP | (direct IP) |
-| Unifi- Nomad | Ping | 10.10.10.203 |
-| Unifi- Overwatch | Ping | (IP unknown) |
-| Unifi- Rogue | Ping | 10.10.10.209 |
-| Unifi- Sentry | Ping | (IP unknown) |
+| sentinel | — | Network controller |
+| sentry | 10.10.10.1 | Gateway/router (DR7) |
+| overwatch | 10.10.10.130 | UNVR Instant (6 cameras) |
+
+Planned: UCG Fiber replacing DR7. DR7 → managed WiFi 7 AP.
+
+---
+
+## Meshtastic
+
+7 nodes: Mesh-Butler (D1L, Den, HA serial gateway), Mesh-CatDad (RAK 4631, Garage),
+Mesh-KittyMom (RAK 4631, Master), Mesh-Ford (T1000-E), Mesh-Lincoln (T1000-E),
+Mesh-Drive, Mesh-House.
+Channels: Ch0 PubBroadcast, Ch1 Meow, Ch2 Purr, Ch3 Bark
+MQTT → local Mosquitto, user=ryanhofer, topic=msh/US, JSON+encryption, uplink+downlink on.
 
 ---
 
 ## TODO
 
-- [ ] Confirm Ollama status — was at 10.10.10.203:11434, currently not running. Removed or moved to rogue?
-- [ ] Get IPs for overwatch and sentry Unifi devices
+### Infrastructure
+- [ ] Confirm IPs for Overwatch and Sentry in Uptime Kuma
 - [ ] Confirm butler.hofer.lan NPM proxy target and port
-- [ ] Set up shell alias on scout: alias hlcontext='ssh nomad cat /srv/homelab/homelab-context.md'
-- [ ] Consider adding InfluxDB monitor (port 8086, no NPM proxy)
+- [ ] Shell alias on Scout: alias hlcontext='ssh nomad cat /srv/homelab/homelab-context.md'
+- [ ] Set up SDR on Nomad (RTL-SDR or RSP1A, SDR++ Docker, ADS-B → HA dashboard)
+
+### Home Assistant
+- [ ] Egg production tracker (input_number, InfluxDB, Grafana)
+- [ ] Meshtastic SNR/RSSI ApexCharts card in HA
+- [ ] NWS severe weather alerts → Meow channel via HA automation
+
+### AI
+- [ ] Upload survival PDFs to Open WebUI knowledge base (RAG workspace)
+
+### Documentation
+- [ ] KB Emergency Playbook (ER310PRO, Meshtastic, evacuation — plain language)
+- [ ] KB Infrastructure Runbook (network, cameras, HA, passwords — plain language)
+- [ ] Ham radio licensing — Technician then General class
 
 ---
 
 ## Session Log
 
-### 2026-04-18 — Session 1
-Model: Claude Sonnet 4.6
-- Discovered homelab topology via docker ps, compose ls, NPM nginx configs
-- nomad (10.10.10.203) is Ubuntu running Docker directly, not HashiCorp Nomad
-- rogue (10.10.10.209) is macOS running Docker
-- DNS domain is *.hofer.lan via Pihole; all services proxied via NPM
-- Root cause of all Uptime Kuma failures: monitors used .home.arpa DNS which Uptime Kuma cannot resolve
-- Fixed all broken monitors to use https://*.hofer.lan URLs
-- Added missing monitors: Grafana, Vaultwarden, Kiosk, Rogue-Portainer
-- Removed Nomad-Ollama (service not running)
-- Created private GitHub repo: github.com/ryanmichaelhofer/homelab
-- Initialized /srv/homelab as git repo and pushed
+### 2026-04-18 — Session 2
+- GitHub repo made public, session open/close protocol locked in
+- Verified full stack: Nomad 22 containers, Rogue (jellyfin, epg-updater, open-webui, ollama), Butler (HA 2026.4.3)
+- Added Lookout (.32, weather → butler) and Herald (.231, TV tuner → jellyfin)
+- Confirmed Uptime Kuma healthy
+- Added SDR task to backlog
+- Simplified session-open diagram rule: 3 boxes, name + IP + OS only
 
+### 2026-04-18 — Session 1
+- Discovered full homelab topology
+- Fixed all Uptime Kuma monitors (.home.arpa → .hofer.lan)
+- Created GitHub repo github.com/ryanmichaelhofer/homelab
