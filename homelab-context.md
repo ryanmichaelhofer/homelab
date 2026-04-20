@@ -12,9 +12,19 @@ https://github.com/ryanmichaelhofer/homelab/blob/main/homelab-context.md
 ## Session Protocol
 
 **Open:** Claude fetches this file from GitHub, issues SSH verification commands,
-Ryan pastes output, Claude draws 3-box server diagram (name + IP + OS only) + todo list.
+Ryan pastes output, Claude draws 3-box server diagram (name + IP + OS only) + prints todo list.
 
-**Close:** Claude produces updated homelab-context.md content, Ryan uses Python to write and push.
+**Close:** Claude produces updated homelab-context.md content, Ryan commits and pushes to GitHub.
+
+**Sessions can be run from:**
+- Scout (10.10.10.161, macOS MacBook Air) — SSH config at ~/.ssh/config
+- Command (10.10.10.68, Windows 11 / PS7) — SSH config at C:\Users\ryanh\.ssh\config
+
+**Command session start:** Before SSH verification, run:
+```
+cd C:\homelab\homelab && git pull
+cd C:\homelab\house-projects && git pull
+```
 
 ---
 
@@ -33,19 +43,22 @@ Ryan pastes output, Claude draws 3-box server diagram (name + IP + OS only) + to
 ## Servers
 
 ### nomad -- 10.10.10.203 (Ubuntu 24.04, Docker)
-**Infrastructure:** npm, pihole, portainer :9443, uptime-kuma :3002, homepage, diun, dozzle
-**Productivity:** immich :2283, immich-kiosk :8085, mealie :9925, memos :5230, vaultwarden, filebrowser :8083, kavita :5000, romm :8690
+**Infrastructure:** npm :80/81/443, pihole :53/:8081, portainer :9443, uptime-kuma :3002, homepage :3000(internal), diun, dozzle :8080(internal)
+**Productivity:** immich :2283, immich-kiosk :8085, mealie :9925, memos :5230, vaultwarden :80(internal), filebrowser :8083, kavita :5000, romm :8690
 **Knowledge:** kiwix :8080, kolibri :8082
 **Telemetry:** grafana :3000, influxdb :8086
+**Supporting:** immich_redis :6379(internal), immich_postgres :5432(internal), immich_machine_learning, romm-db :3306(internal)
 
-### rogue -- 10.10.10.209 (macOS, OrbStack)
+### rogue -- 10.10.10.209 (macOS M2, OrbStack)
 **Media:** jellyfin :8096, epg-updater
 **AI:** open-webui :3000 -> ai.hofer.lan; ollama (native/Metal): llama3.2:3b, gemma3:12b
-**Note:** docker at /usr/local/bin/docker. PATH fixed via ~/.zshenv for non-interactive SSH.
+**Infrastructure:** portainer :9443
+**Note:** Docker via OrbStack. PATH=$PATH:/opt/homebrew/bin for non-interactive SSH.
+**Storage:** Backpack external drive at /Volumes/backpack (229GB movies, "Movie Title (Year)/" structure)
 
-### butler -- 10.10.10.157 (HA OS, Core 2026.4.3)
-**Integrations:** eufy (10 door sensors), garmin (x2), meshtastic (D1L serial), govee purifiers, ha-mcp
-**Add-ons:** mosquitto :1883, matter server, eufy-security-ws, terminal & SSH :2222, file editor
+### butler -- 10.10.10.157 (HA OS 17.2, Core 2026.4.3)
+**Integrations:** eufy (10 door sensors), garmin (x2 accounts — Ryan + KB), meshtastic (D1L serial), govee (4x H7129 purifiers), ha-mcp
+**Add-ons:** mosquitto :1883 v7.0.1, matter server v8.4.0, eufy-security-ws v2.1.0, terminal & SSH :2222 v10.1.0, file editor v6.0.0
 
 ---
 
@@ -55,8 +68,8 @@ Ryan pastes output, Claude draws 3-box server diagram (name + IP + OS only) + to
 |---|---|---|---|
 | lookout | 10.10.10.32 | Ecowitt weather station | -> butler |
 | herald | 10.10.10.231 | HDHomeRun TV tuner | -> jellyfin on rogue |
-| scout | 10.10.10.161 | macOS workstation | SSH origin |
-| command | 10.10.10.68 | Windows workstation | passwordless SSH via administrators_authorized_keys |
+| scout | 10.10.10.161 | macOS workstation (MacBook Air) | SSH origin |
+| command | 10.10.10.68 | Windows 11 workstation (gaming PC / PS7) | SSH origin |
 
 ---
 
@@ -66,7 +79,7 @@ Ryan pastes output, Claude draws 3-box server diagram (name + IP + OS only) + to
 |---|---|---|
 | sentinel | -- | Network controller |
 | sentry | 10.10.10.1 | Gateway/router (DR7) |
-| overwatch | 10.10.10.130 | UNVR Instant (6 cameras) |
+| overwatch | 10.10.10.130 | UNVR Instant (6 cameras: 3x G6 PTZ, 2x G6 Bullet, 1x G6 Pro Bullet) |
 
 Planned: UCG Fiber replacing DR7. DR7 -> managed WiFi 7 AP.
 
@@ -82,17 +95,23 @@ MQTT -> local Mosquitto, user=ryanhofer, topic=msh/US, JSON+encryption, uplink+d
 
 ---
 
-## Scout SSH Config (~/.ssh/config)
+## SSH Config
 
-Host nomad -- 10.10.10.203, user ryanhofer
-Host rogue -- 10.10.10.209, user ryanhofer
-Host butler -- 10.10.10.157, user root, port 2222
-Host command -- 10.10.10.68, user ryanhofer
+### Scout (~/.ssh/config)
+Host nomad -- 10.10.10.203, user ryanhofer, ed25519
+Host rogue -- 10.10.10.209, user ryanhofer, ed25519
+Host butler -- 10.10.10.157, user root, port 2222, ed25519
+Host command -- 10.10.10.68, user ryanhofer, ed25519
 
-All hosts: passwordless SSH via ed25519 key generated on scout.
-GitHub: SSH auth configured, scout key added to github.com/ryanmichaelhofer.
 Aliases: hlcontext='ssh nomad cat /srv/homelab/homelab-context.md', roguedk='ssh rogue /usr/local/bin/docker'
-Repos: ~/homelab, ~/house-projects -- both on SSH remotes.
+Repos: ~/homelab, ~/house-projects (SSH remotes)
+
+### Command (C:\Users\ryanh\.ssh\config)
+Host nomad -- 10.10.10.203, user ryanhofer, ed25519
+Host rogue -- 10.10.10.209, user ryanhofer, ed25519
+Host butler -- 10.10.10.157, user root, port 2222, ed25519
+Repos: C:\homelab\homelab, C:\homelab\house-projects (HTTPS remotes)
+Key: C:\Users\ryanh\.ssh\id_ed25519 (generated 2026-04-20, fingerprint SHA256:z9BT0fw+qK+I54M/E4ozuEnr//ZV9Oq5u5VtjbWjKyQ)
 
 ---
 
@@ -125,6 +144,16 @@ Repos: ~/homelab, ~/house-projects -- both on SSH remotes.
 ---
 
 ## Session Log
+
+### 2026-04-20 -- Session 4
+- First session run from Command (Win11/PS7, 10.10.10.68)
+- Generated ed25519 key on Command, pushed to nomad/rogue/butler authorized_keys
+- Configured SSH config on Command with short names (nomad/rogue/butler) -- all passwordless verified
+- Installed Git on Command, cloned homelab + house-projects to C:\homelab\
+- Verified full stack: Nomad 23 containers, Rogue 4 containers, Butler 5 add-ons -- all healthy
+- Confirmed AnythingLLM + Ollama removed from Nomad (redundant with Rogue M2/Metal)
+- Updated session protocol: git pull both repos at start of every Command session
+- Command is now a first-class work machine alongside Scout
 
 ### 2026-04-19 -- Session 3
 - Verified all servers: Nomad 23 containers, Rogue 4 containers, Butler HA 2026.4.3 -- all healthy
