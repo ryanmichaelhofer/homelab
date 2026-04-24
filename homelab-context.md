@@ -1,4 +1,4 @@
-hHofer Homelab — Context Document
+hHofer Homelab â Context Document
 Fetch this at the start of every Claude session from:
 https://github.com/ryanmichaelhofer/homelab/blob/main/homelab-context.md
 ---
@@ -9,8 +9,8 @@ Open: Claude fetches this file from GitHub, issues SSH verification commands,
 Ryan pastes output, Claude draws 3-box server diagram (name + IP + OS only) + prints todo list.
 Close: Claude produces updated homelab-context.md content, Ryan commits and pushes to GitHub.
 Sessions can be run from:
-Scout (10.10.10.161, macOS MacBook Air) — SSH config at ~/.ssh/config
-Command (10.10.10.68, Windows 11 / PS7) — SSH config at C:\Users\ryanh\.ssh\config
+Scout (10.10.10.161, macOS MacBook Air) â SSH config at ~/.ssh/config
+Command (10.10.10.68, Windows 11 / PS7) â SSH config at C:\Users\ryanh\.ssh\config
 Command session start: Before SSH verification, run:
 ```
 cd C:\homelab\homelab && git pull
@@ -42,7 +42,7 @@ Note: Docker via OrbStack. PATH=$PATH:/opt/homebrew/bin for non-interactive SSH.
 Storage: Backpack external drive at /Volumes/backpack (229GB movies, "Movie Title (Year)/" structure)
 
 butler -- 10.10.10.157 (HA OS, Core 2026.4.3)
-Integrations: eufy (10 door sensors), garmin (x2 accounts — Ryan + KB), meshtastic (D1L serial),
+Integrations: eufy (10 door sensors), garmin (x2 accounts â Ryan + KB), meshtastic (D1L serial),
   govee (4x H7129 purifiers), ha-mcp, nws_alerts (VAZ525), fordpass (x2 trucks)
 Add-ons: mosquitto :1883, matter server, eufy-security-ws, terminal & SSH :2222, file editor
 HACS integrations: meshtastic, nws_alerts v6.7.3, apexcharts-card, mushroom, card-mod,
@@ -90,27 +90,27 @@ Host butler -- 10.10.10.157, user root, port 2222, ed25519
 Repos: C:\homelab\homelab, C:\homelab\house-projects (HTTPS remotes)
 Key: C:\Users\ryanh\.ssh\id_ed25519 (generated 2026-04-20, fingerprint SHA256:z9BT0fw+qK+I54M/E4ozuEnr//ZV9Oq5u5VtjbWjKyQ)
 ---
-Home Assistant — Dashboards
+Home Assistant â Dashboards
 Overview (lovelace): Home (10 cards), Vehicles (2 cards), Doors (7 cards)
 Mesh (lovelace/mesh): Map card (6 nodes), ApexCharts SNR 24h (6 nodes), Node Status (hops + last heard)
 Media (dashboard-media)
 Lighting (dashboard-lighting)
 Map
 
-Home Assistant — Automations (4 total)
+Home Assistant â Automations (4 total)
 1. Dropbox - Increment package count (counter.packages_in_dropbox on door open)
 2. Dogs Fed - Increment feed count (counter.dogs_fed_today on door open)
-3. Daily reset - Counters (midnight reset: packages, dogs fed, eggs — merged Session 5)
+3. Daily reset - Counters (midnight reset: packages, dogs fed, eggs â merged Session 5)
 4. NWS Alert - Send to Purr channel (sensor.nws_alerts_zone_vaz525_nws_alerts_alerts > 0
    -> meshtastic.broadcast_channel_message to meshtastic.gateway_btlr_channel_purr)
    Message format: "NWS: [Event] | [Severity] | until [time]"
 
-Home Assistant — Helpers
+Home Assistant â Helpers
 input_number.eggs_collected (egg tracker, resets at midnight)
 counter.packages_in_dropbox
 counter.dogs_fed_today
 
-Home Assistant — Scripts
+Home Assistant â Scripts
 script.log_egg_collection, script.add_1_egg, script.add_2_eggs (egg tracker dashboard buttons)
 
 NWS Alerts
@@ -118,7 +118,7 @@ Integration: nws_alerts v6.7.3 (HACS, finity69x2)
 Zone: VAZ525 (Chesapeake/Virginia Beach)
 Sensor: sensor.nws_alerts_zone_vaz525_nws_alerts_alerts
 Attribute structure: Alerts[0].Event, .Severity, .Headline, .Ends (ISO datetime)
-Tested: 2026-04-21 — message delivered to Purr channel confirmed
+Tested: 2026-04-21 â message delivered to Purr channel confirmed
 ---
 TODO
 Infrastructure
@@ -157,6 +157,15 @@ Hardware (tracked in house-projects repo)
 ---
 Session Log
 
+2026-04-24 -- Session 8
+Run from: Scout (macOS, 10.10.10.161)
+Fixed sensor.house_total_power — was broken from a prior YAML rewrite (template not loading)
+Formula confirmed correct: (a1_main - a2_solar + b1_main - b2_solar) = net house consumption in W
+Negative = net exporting to grid (e.g. -768W with solar running)
+Fix applied: edited /config/configuration.yaml directly on Butler, reloaded via homeassistant.reload_all in Developer Tools
+Sensor confirmed live at -768W with solar producing ~648W per leg
+3-day ApexCharts history shows zeros (recorder had bad data) — will fill in correctly going forward
+
 2026-04-24 -- Session 7
 Run from: [Scout or Command?]
 Short admin session
@@ -182,7 +191,7 @@ HA cleanup and infrastructure build session
 - Merged egg nightly reset into Daily reset automation (3 counters, one automation at midnight)
 - Fixed entity name typo: Light- Overheard Bar -> Light- Overhead Bar (Govee, Kitchen)
 - Confirmed Homarr replaced Homepage on Nomad; updated context doc
-- Audited all HA helpers, scripts, automations — no orphans found
+- Audited all HA helpers, scripts, automations â no orphans found
 - Built Mesh dashboard (lovelace/mesh): map card (6 GPS nodes) + ApexCharts SNR 24h + Node Status
 - Installed NWS Alerts v6.7.3 via HACS, configured zone VAZ525
 - Built automation: NWS alerts -> Meshtastic Purr (Ch2)
