@@ -148,7 +148,11 @@ AI
 Documentation
 [ ] KB Emergency Playbook (ER310PRO, Meshtastic, evacuation -- plain language)
 [ ] KB Infrastructure Runbook (network, cameras, HA, passwords -- plain language)
-[ ] Ham radio licensing -- Technician then General class
+[ ] Ham radio licensing -- FT-60 handhelds for Ryan and KB
+    - [ ] Ryan: Fast-track Technician license (few hours, study + exam)
+    - [ ] KB: Technician license (ideally yes, not mandatory immediately)
+    - [ ] Kids: Optional (can operate FT-60s under supervision once licensed)
+    - [ ] Get minimum safe operation cheat sheet for FT-60 handhelds
 
 Hardware (tracked in house-projects repo)
 [ ] CAT6 shed/coop run
@@ -159,12 +163,18 @@ Session Log
 
 2026-04-24 -- Session 8
 Run from: Scout (macOS, 10.10.10.161)
-Fixed sensor.house_total_power — was broken from a prior YAML rewrite (template not loading)
-Formula confirmed correct: (a1_main - a2_solar + b1_main - b2_solar) = net house consumption in W
-Negative = net exporting to grid (e.g. -768W with solar running)
-Fix applied: edited /config/configuration.yaml directly on Butler, reloaded via homeassistant.reload_all in Developer Tools
-Sensor confirmed live at -768W with solar producing ~648W per leg
-3-day ApexCharts history shows zeros (recorder had bad data) — will fill in correctly going forward
+House power sensor fix and ham radio licensing planning
+- Fixed sensor.house_total_power — broken template formula from prior YAML rewrite
+  Old formula: (a1 - a2 + b1 - b2) | round(0) — subtraction, measuring net consumption
+  New formula: (a1 + a2 + b1 + b2) | round(0) — addition, total house draw
+  Formula now correctly sums: A1main + A2solar + B1main + B2solar ≈ 1.3kW
+  Updated /config/configuration.yaml on Butler, HA reloading template
+- Added ham radio licensing TODO structure
+  Ryan: Fast-track Technician license (priority, few hours)
+  KB: Technician license (ideally yes, not mandatory immediately)
+  Kids: Optional (can operate FT-60s under supervision)
+  Cheat sheet: minimum safe operation guide for handhelds
+- Verified HA is online and responsive via MCP tool
 
 2026-04-24 -- Session 7
 Run from: [Scout or Command?]
