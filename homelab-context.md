@@ -151,27 +151,31 @@ Documentation
 [ ] Ham radio licensing -- Technician then General class
 
 Hardware (tracked in house-projects repo)
-[ ] SDR antenna build -- nRSP-ST, rear left gable peak confirmed
-[ ] CAT6 attic run #2 for nRSP-ST
 [ ] CAT6 shed/coop run
 [ ] Solar coop power decision + execution
 [ ] 5th solar panel for shed winter margin
 ---
 Session Log
 
+2026-04-24 -- Session 7
+Run from: [Scout or Command?]
+Short admin session
+- Removed SDR antenna build and CAT6 attic run #2 from TODO -- chose handhelds for resilience/portability
+
 2026-04-24 -- Session 6
 Run from Command (Win11/PS7, 10.10.10.68)
 HA system design session -- pattern of life analysis and entity inventory
 - Pulled full HA entity inventory: 1,743 entities across 33 domains
-- - Documented all integrations: UniFi Protect, Eufy, Ecowitt GW3000B, Enphase Envoy, FordPass (x2), Garmin Connect (x2), Meshtastic (GALLBUSH mesh 7 nodes), Roborock, SmartThings, Govee, Shelly, Refoss, go2rtc, InfluxDB, NWS, FlightRadar24, and more
-  - - Connected to InfluxDB homelab bucket (no retention limit) -- 2.2M energy points, 245K presence events, 19K motion triggers from April 14 onward
-    - - Conducted full pattern of life analysis: door traffic, motion by hour/day, presence/away windows, environmental baseline
-      - - Key findings: garage side door is real front door, front door is Kirstin morning/evening dog routine, Ryan active in garage from ~4-5AM, true overnight quiet only midnight-3AM, 3PM is busiest door hour, Wed/Thu most active days (spring break inflated)
-        - - Confirmed GALLBUSH-BUTLER Meshtastic gateway connected, all 7 nodes active with healthy SNR (5.5-6.5 dB)
-          - - Solar system net-exporting ~6.3kW at time of analysis; electronics space running 87-89F (action item)
-            - - Created GALLBUSH_PATTERN_OF_LIFE.md (see repo -- TODO: commit separately)
-              - - Added 12 new TODO items to Home Assistant section
-                - - Note: baseline data is spring-break-influenced -- re-run analysis mid-May 2026
+- Documented all integrations: UniFi Protect, Eufy, Ecowitt GW3000B, Enphase Envoy, FordPass (x2), Garmin Connect (x2), Meshtastic (GALLBUSH mesh 7 nodes), Roborock, SmartThings, Govee, Shelly, Refoss, go2rtc, InfluxDB, NWS, FlightRadar24, and more
+- Connected to InfluxDB homelab bucket (no retention limit) -- 2.2M energy points, 245K presence events, 19K motion triggers from April 14 onward
+- Conducted full pattern of life analysis: door traffic, motion by hour/day, presence/away windows, environmental baseline
+- Key findings: garage side door is real front door, front door is Kirstin morning/evening dog routine, Ryan active in garage from ~4-5AM, true overnight quiet only midnight-3AM, 3PM is busiest door hour, Wed/Thu most active days (spring break inflated)
+- Confirmed GALLBUSH-BUTLER Meshtastic gateway connected, all 7 nodes active with healthy SNR (5.5-6.5 dB)
+- Solar system net-exporting ~6.3kW at time of analysis; electronics space running 87-89F (action item)
+- Created GALLBUSH_PATTERN_OF_LIFE.md (see repo -- TODO: commit separately)
+- Added 12 new TODO items to Home Assistant section
+- Note: baseline data is spring-break-influenced -- re-run analysis mid-May 2026
+
 2026-04-21 -- Session 5
 Run from Command (Win11/PS7, 10.10.10.68)
 HA cleanup and infrastructure build session
