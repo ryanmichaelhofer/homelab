@@ -1,4 +1,4 @@
-Hofer Homelab — Context Document
+hHofer Homelab — Context Document
 Fetch this at the start of every Claude session from:
 https://github.com/ryanmichaelhofer/homelab/blob/main/homelab-context.md
 ---
@@ -129,6 +129,18 @@ Home Assistant
 [ ] Meshtastic SNR/RSSI ApexCharts historical card (InfluxDB source for long-term trending)
 [ ] Ecowitt (Lookout 10.10.10.32) integration in HA
 [ ] Renogy Rover telemetry -> HA via HACS renogy_rover
+[ ] Fix HA recorder retention -- add purge_keep_days: 365 to configuration.yaml (currently losing data after ~10 days)
+[ ] Fix Reolink camera motion binary sensors -- all 5 showing unavailable (broken webhook/RTSP event subscription)
+[ ] Identify and rename binary_sensor.h51278c47_motion -- confirmed air purifier proximity sensor, not security-relevant
+[ ] Add electronics space temp alert automation -- space regularly hits 87-89F, alert above 85F, escalate above 90F
+[ ] Fix automation.egg_nightly_reset -- currently unavailable
+[ ] Fix master_fans_all and jenny_fans_all lights -- showing unavailable
+[ ] Revise GALLBUSH_PATTERN_OF_LIFE.md baseline -- re-run analysis mid-May 2026 with clean post-spring-break data
+[ ] Replace upstairs purifier filter -- at 17%
+[ ] Replace master purifier filter -- at 29%, monitor
+[ ] HA system design Phase 1: layered security automations (3-tier: perimeter / property / house breach)
+[ ] HA system design Phase 2: Gallbush environmental dashboard (Ecowitt, solar, AQI, soil, Meshtastic node health)
+[ ] HA system design Phase 3: dual-user dashboard (Ryan + Kirstin views)
 
 AI
 [ ] Upload survival PDFs to Open WebUI knowledge base (RAG workspace)
@@ -146,6 +158,20 @@ Hardware (tracked in house-projects repo)
 [ ] 5th solar panel for shed winter margin
 ---
 Session Log
+
+2026-04-24 -- Session 6
+Run from Command (Win11/PS7, 10.10.10.68)
+HA system design session -- pattern of life analysis and entity inventory
+- Pulled full HA entity inventory: 1,743 entities across 33 domains
+- - Documented all integrations: UniFi Protect, Eufy, Ecowitt GW3000B, Enphase Envoy, FordPass (x2), Garmin Connect (x2), Meshtastic (GALLBUSH mesh 7 nodes), Roborock, SmartThings, Govee, Shelly, Refoss, go2rtc, InfluxDB, NWS, FlightRadar24, and more
+  - - Connected to InfluxDB homelab bucket (no retention limit) -- 2.2M energy points, 245K presence events, 19K motion triggers from April 14 onward
+    - - Conducted full pattern of life analysis: door traffic, motion by hour/day, presence/away windows, environmental baseline
+      - - Key findings: garage side door is real front door, front door is Kirstin morning/evening dog routine, Ryan active in garage from ~4-5AM, true overnight quiet only midnight-3AM, 3PM is busiest door hour, Wed/Thu most active days (spring break inflated)
+        - - Confirmed GALLBUSH-BUTLER Meshtastic gateway connected, all 7 nodes active with healthy SNR (5.5-6.5 dB)
+          - - Solar system net-exporting ~6.3kW at time of analysis; electronics space running 87-89F (action item)
+            - - Created GALLBUSH_PATTERN_OF_LIFE.md (see repo -- TODO: commit separately)
+              - - Added 12 new TODO items to Home Assistant section
+                - - Note: baseline data is spring-break-influenced -- re-run analysis mid-May 2026
 2026-04-21 -- Session 5
 Run from Command (Win11/PS7, 10.10.10.68)
 HA cleanup and infrastructure build session
